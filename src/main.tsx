@@ -1,9 +1,18 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import App from './App';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import LoginPage from './pages/login/LoginPage';
+import './App.css';
+import Layout from './common/Layout';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <Layout>
+      <BrowserRouter>
+        <Routes>
+          <Route path='login' element={<LoginPage />} />
+        </Routes>
+      </BrowserRouter>
+    </Layout>
   </StrictMode>
 );
