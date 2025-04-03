@@ -12,8 +12,13 @@ export default function LoginPage() {
   };
 
   let [active, setActive] = useState(false);
-  const handleLogin = () => {
+  const activeLogin = () => {
     email && passwd ? setActive(true) : setActive(false);
+  };
+
+  let [msg, setMsg] = useState(' ');
+  const handleLogin = () => {
+    if (!email.includes('@')) setMsg('올바른 이메일 형식을 입력하세요');
   };
 
   return (
@@ -25,24 +30,26 @@ export default function LoginPage() {
           type='email'
           placeholder='아이디(E-mail)'
           onChange={handleEmail}
-          onKeyUp={handleLogin}
+          onKeyUp={activeLogin}
           className='w-2/3 h-[45px] bg-[#F5F5F5] p-2 border-1 border-zinc-200 focus:ring-1 focus:ring-inset focus:ring-gray-400 focus:outline-none'
         />
         <input
           type='password'
           placeholder='비밀번호'
           onChange={handlePasswd}
-          onKeyUp={handleLogin}
+          onKeyUp={activeLogin}
           className='w-2/3 h-[45px] bg-[#F5F5F5] p-2 border-1 border-zinc-200 focus:ring-1 focus:ring-inset focus:ring-gray-400 focus:outline-none'
         />
         <button
+          onClick={handleLogin}
           className={`w-2/3 h-[45px] my-3 ${
             active ? 'bg-[#3C2F2B] text-[#F5F5F5]' : 'bg-[#F5F5F5]'
           }`}
         >
           로그인
         </button>
-        <button>이메일로 회원가입</button>
+        <p className='text-red-500 text-sm h-4'>{msg}</p>
+        <button className='mt-3'>이메일로 회원가입</button>
       </div>
     </>
   );
