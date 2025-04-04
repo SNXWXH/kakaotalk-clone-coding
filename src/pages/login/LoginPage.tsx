@@ -1,4 +1,5 @@
 import { ChangeEvent, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function LoginPage() {
   const mockData = {
@@ -31,6 +32,11 @@ export default function LoginPage() {
     }
   };
 
+  const navigate = useNavigate();
+  const handleNavigate = () => {
+    navigate('/register');
+  };
+
   return (
     <>
       <div className='flex flex-col items-center w-[392px] h-[642px] bg-[#F9E000] text-sm rounded-xl'>
@@ -59,7 +65,9 @@ export default function LoginPage() {
           로그인
         </button>
         <p className='text-red-500 text-sm h-4'>{msg}</p>
-        <button className='mt-3'>이메일로 회원가입</button>
+        <button onClick={handleNavigate} className='mt-3'>
+          이메일로 회원가입
+        </button>
       </div>
     </>
   );
