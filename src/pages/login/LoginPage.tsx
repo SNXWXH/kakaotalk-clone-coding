@@ -34,7 +34,7 @@ export default function LoginPage() {
   return (
     <>
       <div className='flex flex-col items-center w-[392px] h-[642px] bg-[#F9E000] text-sm rounded-xl'>
-        <img src='../../public/kakaoLogo.png' className='w-1/3 mt-25 mb-10' />
+        <img src={'/kakaoLogo.png'} className='w-1/3 mt-25 mb-10' />
 
         <input
           type='email'
