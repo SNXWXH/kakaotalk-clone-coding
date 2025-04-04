@@ -23,7 +23,10 @@ export default function LoginPage() {
 
   let [msg, setMsg] = useState(' ');
   const handleLogin = () => {
-    if (!email.includes('@')) setMsg('올바른 이메일 형식을 입력하세요');
+    if (!email.includes('@')) {
+      setMsg('올바른 이메일 형식을 입력하세요');
+      return;
+    }
     if (email !== mockData.email || passwd !== mockData.passwd)
       setMsg('카카오계정 또는 비밀번호를 다시 확인해 주세요.');
     else {

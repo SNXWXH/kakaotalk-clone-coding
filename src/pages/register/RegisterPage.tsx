@@ -1,3 +1,5 @@
+// * input 컴포넌트화 하기
+
 function RegisterPage() {
   return (
     <>
@@ -25,7 +27,7 @@ function RegisterPage() {
             placeholder='비밀번호 8자 이상, 특수문자 포함'
             className='w-2/3 h-[45px] p-2 border-1 items-end border-zinc-200 focus:ring-1 focus:ring-inset focus:ring-gray-400 focus:outline-none'
           />
-        </div>{' '}
+        </div>
         <div className='flex w-5/6 justify-between items-center my-2'>
           <p className='font-medium w-1/4 text-center'>
             비밀번호
