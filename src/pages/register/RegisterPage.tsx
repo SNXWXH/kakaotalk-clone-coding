@@ -14,9 +14,11 @@ function RegisterPage() {
     const formData = new FormData(e.currentTarget);
 
     //! 일단 as로 타입 지정
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
-    const confirm = formData.get('confirm') as string;
+    const email = (formData.get('email') as string).trim();
+    const password = (formData.get('password') as string).trim();
+    const confirm = (formData.get('confirm') as string).trim();
+    const name = (formData.get('name') as string).trim();
+    const phone = (formData.get('phone') as string).trim();
 
     const newErrors = { email: '', password: '', confirm: '' };
     let isValid = true;
@@ -47,7 +49,7 @@ function RegisterPage() {
 
     if (!isValid) return;
 
-    console.log({ email, password, confirm });
+    console.log({ email, password, confirm, name, phone });
   };
 
   return (
