@@ -19,13 +19,19 @@ function RegisterPage() {
     const confirm = formData.get('confirm') as string;
 
     const newErrors = { email: '', password: '', confirm: '' };
+    let isValid = true;
 
-    if (!email) newErrors.email = '이메일을 입력해주세요.';
-    else if (!/^\S+@\S+\.\S+$/.test(email)) {
+    if (!email) {
+      newErrors.email = '이메일을 입력해주세요.';
+      isValid = false;
+    } else if (!/^\S+@\S+\.\S+$/.test(email)) {
       newErrors.email = '이메일 형식이 아닙니다.';
+      isValid = false;
     }
 
     setErrors(newErrors);
+
+    if (!isValid) return;
 
     console.log({ email, password, confirm });
   };
@@ -43,7 +49,7 @@ function RegisterPage() {
         >
           <div className='flex w-5/6 justify-between items-start '>
             <label className='font-medium w-1/4 text-sm text-center pr-2 pt-1'>
-              아이디 <br />
+              이메일 <br />
               (E-mail)
             </label>
             <div className='w-2/3'>
