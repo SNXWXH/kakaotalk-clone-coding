@@ -29,6 +29,20 @@ function RegisterPage() {
       isValid = false;
     }
 
+    if (
+      !password ||
+      password.length < 8 ||
+      !/[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/.test(password)
+    ) {
+      newErrors.password = `8자 이상, 특수문자가 포함되어야 합니다.`;
+      isValid = false;
+    }
+
+    if (password !== confirm) {
+      newErrors.confirm = '비밀번호가 일치하지 않습니다';
+      isValid = false;
+    }
+
     setErrors(newErrors);
 
     if (!isValid) return;
@@ -75,7 +89,7 @@ function RegisterPage() {
                 placeholder='비밀번호 8자 이상, 특수문자 포함'
                 className='w-full h-[45px] p-2 border items-end border-zinc-200 rounded focus:ring-1 focus:ring-inset focus:ring-gray-400 focus:outline-none'
               />
-              <p className='text-red-500 text-xs mt-1 min-h-[18px]'>
+              <p className='text-red-500 text-xs mt-1 min-h-[18px] whitespace-pre-line'>
                 {errors.password}
               </p>
             </div>
