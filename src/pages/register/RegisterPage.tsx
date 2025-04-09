@@ -7,7 +7,13 @@ function RegisterPage() {
     email: '',
     password: '',
     confirm: '',
+    phone: '',
   });
+
+  const getNumberOnly = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const input = event.target as HTMLInputElement;
+    input.value = input.value.replace(/[^0-9]/g, '');
+  };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -20,7 +26,7 @@ function RegisterPage() {
     const name = (formData.get('name') as string).trim();
     const phone = (formData.get('phone') as string).trim();
 
-    const newErrors = { email: '', password: '', confirm: '' };
+    const newErrors = { email: '', password: '', confirm: '', phone: '' };
     let isValid = true;
 
     if (!email) {
@@ -41,7 +47,12 @@ function RegisterPage() {
     }
 
     if (password !== confirm) {
-      newErrors.confirm = '비밀번호가 일치하지 않습니다';
+      newErrors.confirm = '비밀번호가 일치하지 않습니다.';
+      isValid = false;
+    }
+
+    if (phone.length < 11) {
+      newErrors.phone = '휴대폰 번호 11자리를 모두 입력해주세요.';
       isValid = false;
     }
 
@@ -121,14 +132,23 @@ function RegisterPage() {
               className='w-2/3 h-[45px] p-2 border-1 items-end border-zinc-200 focus:ring-1 focus:ring-inset focus:ring-gray-400 focus:outline-none'
             />
           </div>
-          <div className='flex w-5/6 justify-between items-center my-2'>
-            <label className='font-medium w-1/4 text-center'>휴대폰 번호</label>
-            <input
-              type='text'
-              name='phone'
-              placeholder='- 없이 번호를 입력하세요'
-              className='w-2/3 h-[45px] p-2 border-1 items-end border-zinc-200 focus:ring-1 focus:ring-inset focus:ring-gray-400 focus:outline-none'
-            />
+          <div className='flex w-5/6 justify-between items-start mt-2'>
+            <label className='font-medium w-1/4 text-center pr-2 pt-2'>
+              휴대폰 번호
+            </label>
+            <div className='w-2/3'>
+              <input
+                type='text'
+                name='phone'
+                onKeyUp={getNumberOnly}
+                maxLength={11}
+                placeholder='- 없이 번호를 입력하세요'
+                className='w-full h-[45px] p-2 border-1 items-end border-zinc-200 focus:ring-1 focus:ring-inset focus:ring-gray-400 focus:outline-none'
+              />
+              <p className='text-red-500 text-xs mt-1 min-h-[18px]'>
+                {errors.phone}
+              </p>
+            </div>
           </div>
           <button
             type='submit'
