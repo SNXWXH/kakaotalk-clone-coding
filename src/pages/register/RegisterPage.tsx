@@ -1,6 +1,7 @@
 // * input 컴포넌트화 하기
 
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function RegisterPage() {
   const [form, setForm] = useState({
@@ -17,6 +18,8 @@ function RegisterPage() {
     confirm: '',
     phone: '',
   });
+
+  const navigate = useNavigate();
 
   //* 리팩토링 필요
   const validateField = (name: string, value: string) => {
@@ -70,6 +73,8 @@ function RegisterPage() {
     if (hasError) return;
 
     console.log(form);
+    alert('회원가입 성공');
+    navigate('/');
   };
 
   return (
