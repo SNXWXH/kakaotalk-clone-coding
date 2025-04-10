@@ -9,6 +9,7 @@ function RegisterPage() {
     confirm: '',
     phone: '',
   });
+  const [isValid, setValid] = useState(false);
 
   const getNumberOnly = (event: React.KeyboardEvent<HTMLInputElement>) => {
     const input = event.target as HTMLInputElement;
@@ -25,40 +26,34 @@ function RegisterPage() {
     const confirm = (formData.get('confirm') as string).trim();
     const name = (formData.get('name') as string).trim();
     const phone = (formData.get('phone') as string).trim();
+    console.log(phone.length);
 
     const newErrors = { email: '', password: '', confirm: '', phone: '' };
-    let isValid = true;
 
-    if (!email) {
-      newErrors.email = '이메일을 입력해주세요.';
-      isValid = false;
-    } else if (!/^\S+@\S+\.\S+$/.test(email)) {
+    if (!email) newErrors.email = '이메일을 입력해주세요.';
+    else if (!/^\S+@\S+\.\S+$/.test(email))
       newErrors.email = '이메일 형식이 아닙니다.';
-      isValid = false;
-    }
 
     if (
-      !password ||
       password.length < 8 ||
       !/[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/.test(password)
     ) {
       newErrors.password = `8자 이상, 특수문자가 포함되어야 합니다.`;
-      isValid = false;
     }
 
     if (password !== confirm) {
       newErrors.confirm = '비밀번호가 일치하지 않습니다.';
-      isValid = false;
     }
 
     if (phone.length < 11) {
       newErrors.phone = '휴대폰 번호 11자리를 모두 입력해주세요.';
-      isValid = false;
     }
 
+    const hasError = Object.values(newErrors).some((msg) => msg !== '');
     setErrors(newErrors);
+    setValid(!hasError);
 
-    if (!isValid) return;
+    if (hasError) return;
 
     console.log({ email, password, confirm, name, phone });
   };
@@ -152,7 +147,9 @@ function RegisterPage() {
           </div>
           <button
             type='submit'
-            className='w-5/6 h-[45px] my-3 bg-[#F9E000] text-[#3C2F2B] font-bold rounded-sm'
+            className={`w-5/6 h-[45px] my-3 font-bold rounded-sm ${
+              isValid ? 'bg-[#F9E000] text-[#3C2F2B]' : 'bg-[#F5F5F5]'
+            }`}
           >
             회원가입 완료
           </button>
