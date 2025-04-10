@@ -8,6 +8,10 @@ module.exports = {
       name: 'design:\tCSS등 사용자 UI/UX 디자인 변경',
     },
     {
+      value: 'style',
+      name: 'style:\t주석 추가/제거',
+    },
+    {
       value: 'refactor',
       name: 'refactor:\t코드 리팩토링',
     },
