@@ -1,7 +1,7 @@
 function ChatListItem() {
   return (
     <>
-      <div className='flex justify-between items-center h-20 bg-[#FEFEFE]'>
+      <div className='flex justify-between items-center h-20 bg-[#FEFEFE] hover:bg-gray-100'>
         <div className='flex items-center justify-center h-[60px] w-[70px] ml-3'>
           <img src={'./userImg.png'} className='h-full w-[60px] rounded-xl' />
         </div>
