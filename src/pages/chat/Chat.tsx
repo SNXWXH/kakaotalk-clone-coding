@@ -1,3 +1,5 @@
+import ChatBubble from '../../common/ChatBubble';
+
 function Chat() {
   return (
     <>
@@ -6,7 +8,10 @@ function Chat() {
           <img src={'./left.svg'} className='absolute left-4 h-6' />
           <p className='mx-auto text-xl font-bold'>이설아</p>
         </header>
-        <div className='border h-3/4'>chat</div>
+        <div className='border h-3/4'>
+          <ChatBubble isSender={true} />
+          <ChatBubble isSender={false} />
+        </div>
         <div className='h-1/5 relative'>
           <textarea
             name='chat'
