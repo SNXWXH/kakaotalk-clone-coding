@@ -1,14 +1,25 @@
+import { useNavigate } from 'react-router-dom';
 import ChatBubble from '../../common/ChatBubble';
 
 function Chat() {
+  const navigate = useNavigate();
+
+  const handleImg = () => {
+    navigate('/chatList');
+  };
+
   return (
     <>
       <div className='flex flex-col w-[392px] h-[642px] bg-[#c1d6e8] text-sm rounded-xl'>
         <header className='relative flex h-16 items-center'>
-          <img src={'./left.svg'} className='absolute left-4 h-6' />
+          <img
+            src={'./left.svg'}
+            className='absolute left-4 h-6'
+            onClick={handleImg}
+          />
           <p className='mx-auto text-xl font-bold'>이설아</p>
         </header>
-        <div className='border h-3/4'>
+        <div className='h-3/4'>
           <ChatBubble isSender={true} />
           <ChatBubble isSender={false} />
         </div>

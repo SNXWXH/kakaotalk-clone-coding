@@ -1,6 +1,13 @@
+import { useNavigate } from 'react-router-dom';
 import ChatListItem from '../../common/ChatListItem';
 
 function ChatList() {
+  const navigate = useNavigate();
+
+  const handleBtn = () => {
+    navigate('/chat');
+  };
+
   return (
     <>
       <div className='flex flex-col w-[392px] h-[642px] bg-[#F9E000] text-sm rounded-xl'>
@@ -23,7 +30,10 @@ function ChatList() {
               <p className='h-2/5 flex items-center'>나는야 이설아다</p>
             </div>
 
-            <button className='flex justify-center items-center w-1/4 h-9 bg-gray-200 m-3.5 p-2 rounded-2xl cursor-pointer'>
+            <button
+              className='flex justify-center items-center w-1/4 h-9 bg-gray-200 m-3.5 p-2 rounded-2xl cursor-pointer'
+              onClick={handleBtn}
+            >
               나와의 채팅
             </button>
           </div>
