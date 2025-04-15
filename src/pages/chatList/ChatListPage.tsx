@@ -7,6 +7,9 @@ function ChatList() {
   const handleBtn = () => {
     navigate('/chat');
   };
+  const handleImg = () => {
+    navigate('/profile');
+  };
 
   return (
     <>
@@ -20,6 +23,7 @@ function ChatList() {
             <div className='flex items-center justify-center h-[60px] w-[70px] ml-4'>
               <img
                 src={'./profileImg.jpeg'}
+                onClick={handleImg}
                 className='h-full w-[60px] rounded-xl'
               />
             </div>
