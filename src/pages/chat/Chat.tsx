@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import ChatBubble from '../../common/ChatBubble';
+import ChatItem from '../../common/ChatItem';
 
 function Chat() {
   const navigate = useNavigate();
@@ -19,9 +20,8 @@ function Chat() {
           />
           <p className='mx-auto text-xl font-bold'>이설아</p>
         </header>
-        <div className='h-3/4'>
-          <ChatBubble isSender={true} />
-          <ChatBubble isSender={false} />
+        <div className='flex flex-col-reverse overflow-y-auto h-3/4 px-2 gap-2'>
+          <ChatItem />
         </div>
         <div className='h-1/5 relative'>
           <textarea
