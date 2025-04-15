@@ -1,11 +1,20 @@
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 function ProfilePage() {
   const profileBg = '/profileBg.png';
   const navigate = useNavigate();
 
+  const [isEditing, setIsEditing] = useState(false);
+  const [name, setName] = useState('이설아');
+  const [statusMessage, setStatusMessage] = useState('상태메세지야');
+
   const navigateToChat = () => {
     navigate('/chat');
+  };
+
+  const toggleEdit = () => {
+    setIsEditing((prev) => !prev);
   };
 
   return (
@@ -16,6 +25,7 @@ function ProfilePage() {
         onClick={() => navigate(-1)}
         className='absolute top-4 right-4 w-5 h-5 cursor-pointer z-20'
       />
+
       {profileBg && (
         <div
           className='absolute inset-0 z-0 bg-cover bg-center'
@@ -35,10 +45,36 @@ function ProfilePage() {
             src={'/profileImg.jpeg'}
             className='w-28 aspect-square object-cover rounded-2xl mb-2'
           />
-          <p className='text-xl font-bold my-1.5'>이설아</p>
-          <p className='text-base font-medium'>상태메세지야</p>
+
+          {isEditing ? (
+            <>
+              <input
+                type='text'
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className='h-9 w-28 text-xl font-bold my-1 text-center border border-gray-300 bg-white/50 rounded-md px-2 py-1 focus:outline-none'
+              />
+              <input
+                type='text'
+                value={statusMessage}
+                onChange={(e) => setStatusMessage(e.target.value)}
+                className='h-9 w-3/4 text-base font-medium text-center border border-gray-300  bg-white/30 rounded-md px-2 py-1 focus:outline-none'
+              />
+            </>
+          ) : (
+            <>
+              <p className='flex items-center h-9 text-xl font-bold my-1'>
+                {name}
+              </p>
+              <p className='flex items-center h-9 text-base font-medium'>
+                {statusMessage}
+              </p>
+            </>
+          )}
+
           <hr className='w-5/6 border-t border-gray-500 my-4' />
         </div>
+
         <div className='flex justify-between items-center w-11/12 px-4 mb-2'>
           <button
             onClick={navigateToChat}
@@ -46,8 +82,11 @@ function ProfilePage() {
           >
             나와의 채팅
           </button>
-          <button className='w-2/5 h-10 bg-gray-100 shadow-md rounded-md hover:bg-gray-200'>
-            프로필 편집
+          <button
+            onClick={toggleEdit}
+            className='w-2/5 h-10 bg-gray-100 shadow-md rounded-md hover:bg-gray-200'
+          >
+            {isEditing ? '완료' : '프로필 편집'}
           </button>
         </div>
       </div>
