@@ -1,11 +1,18 @@
 function ChatBubble({ isSender }: { isSender: boolean }) {
   return (
     <div
-      className={`flex w-fit max-w-[60%] h-auto items-center justify-center 
-        ${isSender ? 'bg-[#F9E000]' : 'bg-[#FEFEFE]'} 
-        p-1.5 m-2 rounded-sm whitespace-pre-wrap break-all`}
+      className={`flex flex-col max-w-[65%]  ${
+        isSender ? 'items-end' : 'items-start'
+      }`}
     >
-      ChatBubbleChatBubbleChatBubbleChatBubbleChatBubble
+      {!isSender && <p className='m-1'>상대방</p>}
+      <div
+        className={`flex w-fit h-auto
+          ${isSender ? 'bg-[#F9E000] self-end' : 'bg-[#FEFEFE] self-start'} 
+          p-1.5 m-1 rounded-sm whitespace-pre-wrap break-all`}
+      >
+        ChatBubbleChatBubbleChatBubbleChatBubbleChatBubble
+      </div>
     </div>
   );
 }
