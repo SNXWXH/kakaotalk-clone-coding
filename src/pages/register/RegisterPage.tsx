@@ -36,6 +36,16 @@ function RegisterPage() {
         !/[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/.test(value)
       )
         message = '8자 이상, 특수문자가 포함되어야 합니다.';
+      else if (form.email) {
+        const idPart = form.email.split('@')[0];
+        for (let i = 0; i <= idPart.length - 4; i++) {
+          const substring = idPart.slice(i, i + 4);
+          if (value.includes(substring)) {
+            message = '비밀번호에 아이디 일부가 포함되어 있습니다.';
+            break;
+          }
+        }
+      }
     } else if (name === 'confirm') {
       if (value !== form.password) {
         message = '비밀번호가 일치하지 않습니다.';
