@@ -10,16 +10,21 @@ function ProfilePage() {
 
   return (
     <div className='relative w-[392px] h-[642px] rounded-xl overflow-hidden text-sm'>
-      <div
-        className='absolute inset-0 z-0'
-        style={{
-          backgroundImage: profileBg ? `url(${profileBg})` : undefined,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      >
-        {profileBg && <div className='w-full h-full bg-white/30' />}
-      </div>
+      <img
+        src='/xmark.svg'
+        alt='닫기'
+        onClick={() => navigate(-1)}
+        className='absolute top-4 right-4 w-5 h-5 cursor-pointer z-20'
+      />
+      {profileBg && (
+        <div
+          className='absolute inset-0 z-0 bg-cover bg-center'
+          style={{ backgroundImage: `url(${profileBg})` }}
+        >
+          <div className='w-full h-full bg-white/30' />
+        </div>
+      )}
+
       <div
         className={`relative z-10 flex flex-col w-full h-full ${
           profileBg ? '' : 'bg-gray-200'
