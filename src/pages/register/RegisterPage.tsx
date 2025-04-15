@@ -34,8 +34,17 @@ function RegisterPage() {
       if (
         value.length < 8 ||
         !/[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/.test(value)
-      ) {
+      )
         message = '8자 이상, 특수문자가 포함되어야 합니다.';
+      else if (form.email) {
+        const idPart = form.email.split('@')[0];
+        for (let i = 0; i <= idPart.length - 4; i++) {
+          const substring = idPart.slice(i, i + 4);
+          if (value.includes(substring)) {
+            message = '비밀번호에 아이디 일부가 포함되어 있습니다.';
+            break;
+          }
+        }
       }
     } else if (name === 'confirm') {
       if (value !== form.password) {
@@ -52,8 +61,8 @@ function RegisterPage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-
     let newValue = value;
+
     if (name === 'phone') {
       newValue = value.replace(/[^0-9]/g, '');
     }
@@ -70,12 +79,19 @@ function RegisterPage() {
     });
 
     const hasError = Object.values(errors).some((msg) => msg !== '');
-    if (hasError) return;
+    const hasEmpty = Object.values(form).some((value) => value === '');
 
-    console.log(form);
+    if (hasError || hasEmpty) return;
+
     alert('회원가입 성공');
+    console.log(form);
+
     navigate('/');
   };
+
+  const isFormValid =
+    Object.values(errors).every((e) => e === '') &&
+    Object.values(form).every((v) => v !== '');
 
   return (
     <div className='flex flex-col items-center w-[392px] h-[642px] bg-[#FEFEFE] text-sm rounded-xl'>
@@ -89,7 +105,7 @@ function RegisterPage() {
       >
         <div className='flex w-5/6 justify-between items-start'>
           <label className='font-medium w-1/4 text-sm text-center pr-2 pt-1'>
-            이메일 <br />
+            아이디 <br />
             (E-mail)
           </label>
           <div className='w-2/3'>
@@ -106,7 +122,6 @@ function RegisterPage() {
             </p>
           </div>
         </div>
-
         <div className='flex w-5/6 justify-between items-start'>
           <label className='font-medium w-1/4 text-sm text-center pr-2 pt-2'>
             비밀번호
@@ -125,10 +140,10 @@ function RegisterPage() {
             </p>
           </div>
         </div>
-
         <div className='flex w-5/6 justify-between items-start'>
           <label className='font-medium w-1/4 text-sm text-center pr-2 pt-2'>
             비밀번호 <br />
+            확인
           </label>
           <div className='w-2/3'>
             <input
@@ -144,7 +159,6 @@ function RegisterPage() {
             </p>
           </div>
         </div>
-
         <div className='flex w-5/6 justify-between items-center mb-3'>
           <label className='font-medium w-1/4 text-center'>이름</label>
           <input
@@ -156,7 +170,6 @@ function RegisterPage() {
             className='w-2/3 h-[45px] p-2 border border-zinc-200 focus:ring-1 focus:ring-inset focus:ring-gray-400 focus:outline-none'
           />
         </div>
-
         <div className='flex w-5/6 justify-between items-start mt-2'>
           <label className='font-medium w-1/4 text-center pr-2 pt-2'>
             휴대폰 번호
@@ -176,13 +189,13 @@ function RegisterPage() {
             </p>
           </div>
         </div>
-
         <button
           type='submit'
-          className={`w-5/6 h-[45px] my-3 font-bold rounded-sm ${
-            Object.values(errors).every((e) => e === '')
+          disabled={!isFormValid}
+          className={`w-5/6 h-[45px] my-3 font-bold rounded-sm transition-colors ${
+            isFormValid
               ? 'bg-[#F9E000] text-[#3C2F2B]'
-              : 'bg-[#F5F5F5]'
+              : 'bg-[#F5F5F5] text-gray-400 cursor-not-allowed'
           }`}
         >
           회원가입 완료
