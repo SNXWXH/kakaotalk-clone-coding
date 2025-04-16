@@ -63,13 +63,15 @@ export default function LoginPage() {
         <button
           onClick={handleLogin}
           className={`w-2/3 h-[45px] my-3 ${
-            active ? 'bg-[#3C2F2B] text-[#F5F5F5]' : 'bg-[#F5F5F5]'
+            active
+              ? 'bg-[#3C2F2B] text-[#F5F5F5] cursor-pointer'
+              : 'bg-[#F5F5F5] cursor-not-allowed'
           }`}
         >
           로그인
         </button>
         <p className='text-red-500 text-sm h-4'>{msg}</p>
-        <button onClick={handleNavigate} className='mt-3'>
+        <button onClick={handleNavigate} className='mt-3 cursor-pointer'>
           이메일로 회원가입
         </button>
       </div>
