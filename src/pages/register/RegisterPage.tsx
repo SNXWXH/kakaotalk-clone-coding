@@ -37,12 +37,18 @@ function RegisterPage() {
       )
         message = '8자 이상, 특수문자가 포함되어야 합니다.';
       else if (form.email) {
-        const idPart = form.email.split('@')[0];
-        for (let i = 0; i <= idPart.length - 4; i++) {
-          const substring = idPart.slice(i, i + 4);
-          if (value.includes(substring)) {
-            message = '비밀번호에 아이디 일부가 포함되어 있습니다.';
-            break;
+        const id = form.email.split('@')[0];
+
+        if (id.length >= 4) {
+          const lowerValue = value.toLowerCase();
+          const lowerId = id.toLowerCase();
+
+          for (let i = 0; i <= lowerId.length - 4; i++) {
+            const part = lowerId.slice(i, i + 4);
+            if (lowerValue.includes(part)) {
+              message = '비밀번호에 아이디 일부가 포함되어 있습니다.';
+              break;
+            }
           }
         }
       }

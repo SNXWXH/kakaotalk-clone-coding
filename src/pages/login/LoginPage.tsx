@@ -6,6 +6,8 @@ export default function LoginPage() {
     email: 'user@gmail.com',
     passwd: 'user1234!',
   };
+
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const handleEmail = (e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -31,11 +33,10 @@ export default function LoginPage() {
       setMsg('카카오계정 또는 비밀번호를 다시 확인해 주세요.');
     else {
       setMsg('');
-      alert('로그인 성공');
+      navigate('/chatlist');
     }
   };
 
-  const navigate = useNavigate();
   const handleNavigate = () => {
     navigate('/register');
   };

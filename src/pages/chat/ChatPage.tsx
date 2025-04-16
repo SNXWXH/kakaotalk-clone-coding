@@ -1,12 +1,11 @@
 import { useNavigate } from 'react-router-dom';
-import ChatBubble from '../../common/ChatBubble';
 import ChatItem from '../../common/ChatItem';
 
 function Chat() {
   const navigate = useNavigate();
 
   const handleImg = () => {
-    navigate('/chatList');
+    navigate('/chatlist');
   };
 
   return (
