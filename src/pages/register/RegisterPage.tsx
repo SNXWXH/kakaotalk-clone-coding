@@ -200,7 +200,7 @@ function RegisterPage() {
           disabled={!isFormValid}
           className={`w-5/6 h-[45px] my-3 font-bold rounded-sm transition-colors ${
             isFormValid
-              ? 'bg-[#F9E000] text-[#3C2F2B]'
+              ? 'bg-[#F9E000] text-[#3C2F2B] cursor-pointer'
               : 'bg-[#F5F5F5] text-gray-400 cursor-not-allowed'
           }`}
         >
