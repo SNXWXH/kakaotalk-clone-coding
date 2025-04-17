@@ -1,39 +1,44 @@
 import { ChangeEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { login } from '../../api/signIn';
 
 export default function LoginPage() {
-  const mockData = {
-    email: 'user@gmail.com',
-    passwd: 'user1234!',
-  };
-
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const handleEmail = (e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
 
-  const [passwd, setPasswd] = useState('');
-  const handlePasswd = (e: ChangeEvent<HTMLInputElement>) => {
-    setPasswd(e.target.value);
+  const [password, setPassword] = useState('');
+  const handlePassword = (e: ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
   };
 
   let [active, setActive] = useState(false);
   const activeLogin = () => {
-    email && passwd ? setActive(true) : setActive(false);
+    email && password ? setActive(true) : setActive(false);
   };
 
   let [msg, setMsg] = useState(' ');
-  const handleLogin = () => {
+
+  const handleLogin = async () => {
     if (!email.includes('@')) {
       setMsg('올바른 이메일 형식을 입력하세요');
       return;
     }
-    if (email !== mockData.email || passwd !== mockData.passwd)
-      setMsg('카카오계정 또는 비밀번호를 다시 확인해 주세요.');
-    else {
-      setMsg('');
-      navigate('/chatlist');
+
+    try {
+      const res = await login({ email, password });
+
+      if (res.status === 200) {
+        setMsg('');
+        navigate('/chatlist');
+      }
+
+      if (res.status === 404)
+        setMsg('카카오계정 또는 비밀번호를 다시 확인해 주세요.');
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -56,7 +61,7 @@ export default function LoginPage() {
         <input
           type='password'
           placeholder='비밀번호'
-          onChange={handlePasswd}
+          onChange={handlePassword}
           onKeyUp={activeLogin}
           className='w-2/3 h-[45px] bg-[#F5F5F5] p-2 border-1 border-zinc-200 focus:ring-1 focus:ring-inset focus:ring-gray-400 focus:outline-none'
         />
