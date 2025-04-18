@@ -1,7 +1,9 @@
 // * input 컴포넌트화 하기
 
+import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { register } from '../../api/user';
 
 function RegisterPage() {
   const [form, setForm] = useState({
@@ -77,7 +79,7 @@ function RegisterPage() {
     validateField(name, newValue);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     Object.entries(form).forEach(([name, value]) => {
@@ -89,10 +91,24 @@ function RegisterPage() {
 
     if (hasError || hasEmpty) return;
 
-    alert('회원가입 성공');
-    console.log(form);
+    try {
+      const res = await register({
+        email: form.email,
+        password: form.password,
+        name: form.name,
+        phoneNumber: form.phone,
+      });
 
-    navigate('/');
+      if (res.status === 200) {
+        alert('회원가입 성공');
+        navigate('/');
+      }
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        if (err.response?.status === 400) alert(err.response?.data.message);
+        else alert('회원가입 중 오류가 발생하였습니다. 다시 시도해주세요');
+      }
+    }
   };
 
   const isFormValid =
@@ -182,7 +198,7 @@ function RegisterPage() {
           </label>
           <div className='w-2/3'>
             <input
-              type='text'
+              type='tel'
               name='phone'
               value={form.phone}
               onChange={handleChange}
