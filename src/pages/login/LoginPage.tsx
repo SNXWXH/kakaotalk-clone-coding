@@ -30,10 +30,11 @@ export default function LoginPage() {
 
     try {
       const res = await login({ email, password });
-      console.log(res);
 
       if (res.status === 200) {
         setMsg('');
+        localStorage.setItem('token', res.data.accessToken);
+
         navigate('/chatlist');
       }
     } catch (err: unknown) {
