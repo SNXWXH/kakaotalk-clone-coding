@@ -1,8 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import ChatListItem from '../../common/ChatListItem';
+import { useEffect, useState } from 'react';
+import { getChatRoom } from '../../api/chat';
+import { ChatRoom } from '../../types';
 
 function ChatList() {
   const navigate = useNavigate();
+  const [chatRooms, setChatRooms] = useState<ChatRoom[]>([]);
 
   const handleBtn = () => {
     navigate('/chat');
@@ -11,12 +15,20 @@ function ChatList() {
     navigate('/profile');
   };
 
+  useEffect(() => {
+    const getChat = async () => {
+      const res = await getChatRoom();
+      setChatRooms(res.data);
+    };
+    getChat();
+  }, []);
+
   return (
     <>
-      <div className='flex flex-col w-[392px] h-[642px] bg-[#F9E000] text-sm rounded-xl'>
-        <div className='flex items-end m-6'>
-          <p className='text-4xl font-bold'>채팅</p>
-          <p className='ml-2 text-base'>서라</p>
+      <div className='flex flex-col w-[392px] h-[642px] bg-[#FEFEFE] text-sm rounded-xl'>
+        <div className='flex items-center w-full h-24 rounded-t-2xl bg-[#F9E000]'>
+          <p className='text-4xl font-bold ml-6'>채팅</p>
+          <p className='flex items-end ml-2 text-base'>서라</p>
         </div>
         <div className='overflow-auto'>
           <div className='flex justify-between items-center h-20 bg-[#FEFEFE] hover:bg-gray-100'>
@@ -41,15 +53,13 @@ function ChatList() {
               나와의 채팅
             </button>
           </div>
-          <ChatListItem />
-          <ChatListItem />
-          <ChatListItem />
-          <ChatListItem />
-          <ChatListItem />
-          <ChatListItem />
-          <ChatListItem />
-          <ChatListItem />
-          <ChatListItem />
+          {chatRooms.map((room, i) => (
+            <ChatListItem
+              key={i}
+              userInfo={room.other_user}
+              lastMsg={room?.last_message}
+            />
+          ))}
         </div>
       </div>
     </>
