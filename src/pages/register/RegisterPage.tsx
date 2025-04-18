@@ -198,7 +198,7 @@ function RegisterPage() {
           </label>
           <div className='w-2/3'>
             <input
-              type='text'
+              type='tel'
               name='phone'
               value={form.phone}
               onChange={handleChange}
