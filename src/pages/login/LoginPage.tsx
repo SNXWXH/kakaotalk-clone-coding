@@ -1,6 +1,7 @@
 import { ChangeEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../../api/signIn';
+import axios from 'axios';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -22,23 +23,26 @@ export default function LoginPage() {
   let [msg, setMsg] = useState(' ');
 
   const handleLogin = async () => {
-    if (!email.includes('@')) {
+    if (!/^\S+@\S+\.\S+$/.test(email)) {
       setMsg('올바른 이메일 형식을 입력하세요');
       return;
     }
 
     try {
       const res = await login({ email, password });
+      console.log(res);
 
       if (res.status === 200) {
         setMsg('');
         navigate('/chatlist');
       }
-
-      if (res.status === 404)
-        setMsg('카카오계정 또는 비밀번호를 다시 확인해 주세요.');
-    } catch (err) {
-      console.error(err);
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        if (err.response?.status === 401) setMsg(err.response?.data.message);
+        else if (err.response?.status === 404)
+          setMsg(err.response?.data.message);
+        else setMsg('로그인 중 오류가 발생했습니다. 다시 시도해 주세요.');
+      }
     }
   };
 
