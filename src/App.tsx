@@ -13,7 +13,7 @@ function App() {
         <Route path='/' element={<LoginPage />} />
         <Route path='/register' element={<RegisterPage />} />
         <Route path='/chatlist' element={<ChatListPage />} />
-        <Route path='/chat' element={<ChatPage />} />
+        <Route path='/chat/:id' element={<ChatPage />} />
         <Route path='/profile' element={<ProfilePage />} />
       </Routes>
     </Layout>
