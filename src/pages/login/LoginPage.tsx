@@ -34,6 +34,7 @@ export default function LoginPage() {
       if (res.status === 200) {
         setMsg('');
         localStorage.setItem('token', res.data.accessToken);
+        localStorage.setItem('id', res.data.user.id);
 
         navigate('/chatlist');
       }
