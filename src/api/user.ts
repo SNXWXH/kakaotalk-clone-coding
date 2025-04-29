@@ -13,7 +13,7 @@ export const getUserInfo = () =>
     },
   });
 
-export const profile = (profileData: ProfileData) =>
+export const profileUpdate = (profileData: ProfileData) =>
   api.patch('/users/me', profileData, {
     headers: {
       Authorization: `Bearer ${localStorage.getItem('token')}`,

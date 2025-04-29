@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { getUserInfo } from '../../api/user';
+import { getUserInfo, profileUpdate } from '../../api/user';
+import { UserInfo } from '../../types';
 
 function ProfilePage() {
   const profileBg = '/profileBg.png';
@@ -8,7 +9,7 @@ function ProfilePage() {
 
   const [isEditing, setIsEditing] = useState(false);
   // const [profileImg, setProfileImg] = useState('');
-  const [userInfo, setUserInfo] = useState('');
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const [name, setName] = useState('');
   const [statusMessage, setStatusMessage] = useState('');
 
@@ -16,8 +17,12 @@ function ProfilePage() {
     navigate('/chat/me');
   };
 
-  const toggleEdit = () => {
+  const toggleEdit = async () => {
     setIsEditing((prev) => !prev);
+    await profileUpdate({
+      name,
+      bio: statusMessage,
+    });
   };
 
   useEffect(() => {
@@ -56,7 +61,7 @@ function ProfilePage() {
       >
         <div className='flex flex-col justify-center items-center w-full'>
           <img
-            src={userInfo.profile_image_url}
+            src={userInfo?.profile_image_url}
             className='w-28 aspect-square object-cover rounded-2xl mb-2'
           />
 
