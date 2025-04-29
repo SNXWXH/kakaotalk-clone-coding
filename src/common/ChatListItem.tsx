@@ -21,7 +21,7 @@ function ChatListItem({
           <p className='h-3/5 flex items-center font-bold text-[16px]'>
             {name}
           </p>
-          <p className='h-2/5 flex items-center'>
+          <p className='h-2/5 truncate'>
             {lastMsg ? lastMsg.content : '대화내용이 존재하지 않습니다'}
           </p>
         </div>
