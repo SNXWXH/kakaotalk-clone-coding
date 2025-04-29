@@ -36,7 +36,8 @@ function Chat() {
   const sendMsg = async () => {
     const chatroomId = id || '';
 
-    const senderId = senderType === 'me' ? sender_id : Number(id);
+    const senderId =
+      senderType === 'me' ? sender_id : Number(chatInfo?.other_user?.id);
 
     const sendData = {
       sender_id: senderId,
