@@ -6,6 +6,14 @@ export const login = (loginData: LoginData) => api.post('/signin', loginData);
 export const register = (registerData: RegisterData) =>
   api.post('/signup', registerData);
 
+export const getUserInfo = () => {
+  api.patch('/users/me', {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+  });
+};
+
 export const profile = (profileData: ProfileData) => {
   api.patch('/users/me', profileData, {
     headers: {
