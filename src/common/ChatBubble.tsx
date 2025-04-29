@@ -1,17 +1,27 @@
-function ChatBubble({ isSender }: { isSender: boolean }) {
+function ChatBubble({
+  isSender,
+  msg,
+  otherUser,
+}: {
+  isSender: boolean;
+  msg: string;
+  otherUser?: string;
+}) {
   return (
     <div
-      className={`flex flex-col max-w-[65%]  ${
+      className={`flex flex-col max-w-[65%] ${
         isSender ? 'items-end' : 'items-start'
       }`}
     >
-      {!isSender && <p className='m-1'>상대방</p>}
+      {!isSender && (
+        <p className='text-xs text-gray-500 ml-1 mb-0.5'>{otherUser}</p>
+      )}
       <div
-        className={`flex w-fit h-auto
-          ${isSender ? 'bg-[#F9E000] self-end' : 'bg-[#FEFEFE] self-start'} 
-          p-1.5 m-1 rounded-sm whitespace-pre-wrap break-all`}
+        className={`w-fit break-all whitespace-pre-wrap px-3 py-2 rounded-sm ${
+          isSender ? 'bg-[#F9E000] self-end' : 'bg-[#FEFEFE] self-start'
+        }`}
       >
-        ChatBubbleChatBubbleChatBubbleChatBubbleChatBubble
+        {msg}
       </div>
     </div>
   );
