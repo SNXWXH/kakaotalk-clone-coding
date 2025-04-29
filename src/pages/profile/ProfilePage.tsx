@@ -1,21 +1,40 @@
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { getUserInfo, profileUpdate } from '../../api/user';
+import { UserInfo } from '../../types';
 
 function ProfilePage() {
   const profileBg = '/profileBg.png';
   const navigate = useNavigate();
 
   const [isEditing, setIsEditing] = useState(false);
-  const [name, setName] = useState('이설아');
-  const [statusMessage, setStatusMessage] = useState('상태메세지야');
+  // const [profileImg, setProfileImg] = useState('');
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+  const [name, setName] = useState('');
+  const [statusMessage, setStatusMessage] = useState('');
 
   const navigateToChat = () => {
-    navigate('/chat');
+    navigate('/chat/me');
   };
 
-  const toggleEdit = () => {
+  const toggleEdit = async () => {
     setIsEditing((prev) => !prev);
+    await profileUpdate({
+      name,
+      bio: statusMessage,
+    });
   };
+
+  useEffect(() => {
+    const getUser = async () => {
+      const res = await getUserInfo();
+      setUserInfo(res.data);
+      setName(res.data.name);
+      setStatusMessage(res.data.bio);
+      // setProfileImg(res.data.profile_image_url);
+    };
+    getUser();
+  }, []);
 
   return (
     <div className='relative w-[392px] h-[642px] rounded-xl overflow-hidden text-sm'>
@@ -42,7 +61,7 @@ function ProfilePage() {
       >
         <div className='flex flex-col justify-center items-center w-full'>
           <img
-            src={'/profileImg.jpeg'}
+            src={userInfo?.profile_image_url}
             className='w-28 aspect-square object-cover rounded-2xl mb-2'
           />
 
