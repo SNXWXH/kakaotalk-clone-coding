@@ -39,3 +39,12 @@ export type ChatRoom = {
   other_user: UserInfo;
   last_message: LastMsg;
 };
+
+export type Message = {
+  id: number;
+  chatroom_id: number;
+  sender_id: number;
+  content: string;
+  created_at: string;
+  updated_at: string;
+};
