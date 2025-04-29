@@ -8,9 +8,6 @@ function ChatList() {
   const navigate = useNavigate();
   const [chatRooms, setChatRooms] = useState<ChatRoom[]>([]);
 
-  const handleBtn = () => {
-    navigate('/chat');
-  };
   const handleImg = () => {
     navigate('/profile');
   };
@@ -45,20 +42,21 @@ function ChatList() {
               </p>
               <p className='h-2/5 flex items-center'>나는야 이설아다</p>
             </div>
-
             <button
               className='flex justify-center items-center w-1/4 h-9 bg-gray-200 m-3.5 p-2 rounded-2xl cursor-pointer'
-              onClick={handleBtn}
+              onClick={() => navigate('/chat/me')}
             >
               나와의 채팅
             </button>
           </div>
           {chatRooms.map((room, i) => (
-            <ChatListItem
-              key={i}
-              userInfo={room.other_user}
-              lastMsg={room?.last_message}
-            />
+            <div onClick={() => navigate(`/chat/${room.id}`)}>
+              <ChatListItem
+                key={i}
+                userInfo={room.other_user}
+                lastMsg={room?.last_message}
+              />
+            </div>
           ))}
         </div>
       </div>
