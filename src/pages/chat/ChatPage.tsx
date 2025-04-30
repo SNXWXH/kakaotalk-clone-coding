@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import ChatItem from '../../common/ChatItem';
+import ChatItem from '../../\bcomponents/ChatItem';
 import { ChangeEvent, useEffect, useState } from 'react';
 import {
   getChatInfo,

@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router-dom';
-import ChatListItem from '../../common/ChatListItem';
+import ChatListItem from '../../\bcomponents/ChatListItem';
 import { useEffect, useState } from 'react';
 import { getChatRoom } from '../../api/chat';
 import { ChatRoom, UserInfo } from '../../types';
 import { getUserInfo } from '../../api/user';
-import ChatListSkeleton from '../../common/skeletons/ChatListSkeleton';
+import ChatListSkeleton from '../../\bcomponents/skeletons/ChatListSkeleton';
 
 function ChatList() {
   const navigate = useNavigate();
