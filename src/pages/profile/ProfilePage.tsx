@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getUserInfo, profileUpdate } from '../../api/user';
 import { UserInfo } from '../../types';
+import ProfileSkeleton from '../../components/skeletons/ProfileSkeleton';
 
 function ProfilePage() {
   const profileBg = '/profileBg.png';
@@ -12,6 +13,7 @@ function ProfilePage() {
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const [name, setName] = useState('');
   const [statusMessage, setStatusMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
   const navigateToChat = () => {
     navigate('/chat/me');
@@ -27,11 +29,16 @@ function ProfilePage() {
 
   useEffect(() => {
     const getUser = async () => {
-      const res = await getUserInfo();
-      setUserInfo(res.data);
-      setName(res.data.name);
-      setStatusMessage(res.data.bio);
-      // setProfileImg(res.data.profile_image_url);
+      try {
+        const res = await getUserInfo();
+        setUserInfo(res.data);
+        setName(res.data.name);
+        setStatusMessage(res.data.bio);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
     };
     getUser();
   }, []);
@@ -59,55 +66,61 @@ function ProfilePage() {
           profileBg ? '' : 'bg-gray-500'
         } justify-end items-center p-3`}
       >
-        <div className='flex flex-col justify-center items-center w-full'>
-          <img
-            src={userInfo?.profile_image_url}
-            className='w-28 aspect-square object-cover rounded-2xl mb-2'
-          />
-
-          {isEditing ? (
-            <>
-              <input
-                type='text'
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className='h-9 w-28 text-xl font-bold my-1 text-center border border-gray-300 bg-white/50 rounded-md px-2 py-1 focus:outline-none'
+        {isLoading ? (
+          <ProfileSkeleton />
+        ) : (
+          <>
+            <div className='flex flex-col justify-center items-center w-full'>
+              <img
+                src={userInfo?.profile_image_url}
+                className='w-28 aspect-square object-cover rounded-2xl mb-2'
               />
-              <input
-                type='text'
-                value={statusMessage}
-                onChange={(e) => setStatusMessage(e.target.value)}
-                className='h-9 w-3/4 text-base font-medium text-center border border-gray-300  bg-white/50 rounded-md px-2 py-1 focus:outline-none'
-              />
-            </>
-          ) : (
-            <>
-              <p className='flex items-center h-9 text-xl font-bold my-1 text-white'>
-                {name}
-              </p>
-              <p className='flex items-center h-9 font-medium text-white'>
-                {statusMessage}
-              </p>
-            </>
-          )}
 
-          <hr className='w-5/6 border-t border-white my-4' />
-        </div>
+              {isEditing ? (
+                <>
+                  <input
+                    type='text'
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className='h-9 w-28 text-xl font-bold my-1 text-center border border-gray-300 bg-white/50 rounded-md px-2 py-1 focus:outline-none'
+                  />
+                  <input
+                    type='text'
+                    value={statusMessage}
+                    onChange={(e) => setStatusMessage(e.target.value)}
+                    className='h-9 w-3/4 text-base font-medium text-center border border-gray-300  bg-white/50 rounded-md px-2 py-1 focus:outline-none'
+                  />
+                </>
+              ) : (
+                <>
+                  <p className='flex items-center h-9 text-xl font-bold my-1 text-white'>
+                    {name}
+                  </p>
+                  <p className='flex items-center h-9 font-medium text-white'>
+                    {statusMessage}
+                  </p>
+                </>
+              )}
 
-        <div className='flex justify-between items-center w-11/12 px-4 mb-2'>
-          <button
-            onClick={navigateToChat}
-            className='w-2/5 h-10 bg-gray-100 shadow-md rounded-md hover:bg-gray-200 cursor-pointer'
-          >
-            나와의 채팅
-          </button>
-          <button
-            onClick={toggleEdit}
-            className='w-2/5 h-10 bg-gray-100 shadow-md rounded-md hover:bg-gray-200 cursor-pointer'
-          >
-            {isEditing ? '완료' : '프로필 편집'}
-          </button>
-        </div>
+              <hr className='w-5/6 border-t border-white my-4' />
+            </div>
+
+            <div className='flex justify-between items-center w-11/12 px-4 mb-2'>
+              <button
+                onClick={navigateToChat}
+                className='w-2/5 h-10 bg-gray-100 shadow-md rounded-md hover:bg-gray-200 cursor-pointer'
+              >
+                나와의 채팅
+              </button>
+              <button
+                onClick={toggleEdit}
+                className='w-2/5 h-10 bg-gray-100 shadow-md rounded-md hover:bg-gray-200 cursor-pointer'
+              >
+                {isEditing ? '완료' : '프로필 편집'}
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
