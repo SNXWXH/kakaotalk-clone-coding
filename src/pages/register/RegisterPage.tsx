@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { register } from '../../api/user';
+import Modal from '../../components/Modal';
 
 function RegisterPage() {
   const [form, setForm] = useState({
@@ -21,7 +22,15 @@ function RegisterPage() {
     phone: '',
   });
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    setModalMessage('');
+  };
 
   //* 리팩토링 필요
   const validateField = (name: string, value: string) => {
@@ -91,6 +100,8 @@ function RegisterPage() {
 
     if (hasError || hasEmpty) return;
 
+    setIsLoading(true);
+
     try {
       const res = await register({
         email: form.email,
@@ -100,14 +111,23 @@ function RegisterPage() {
       });
 
       if (res.status === 200) {
-        alert('회원가입 성공');
-        navigate('/');
+        setModalMessage('회원가입 성공');
+        setIsModalOpen(true);
+        setTimeout(() => navigate('/'), 2000);
       }
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
-        if (err.response?.status === 400) alert(err.response?.data.message);
-        else alert('회원가입 중 오류가 발생하였습니다. 다시 시도해주세요');
+        if (err.response?.status === 400)
+          setModalMessage(err.response?.data.message);
+        else
+          setModalMessage(
+            '회원가입 중 오류가 발생하였습니다. 다시 시도해주세요'
+          );
+
+        setIsModalOpen(true);
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -213,16 +233,28 @@ function RegisterPage() {
         </div>
         <button
           type='submit'
-          disabled={!isFormValid}
+          disabled={!isFormValid || isLoading}
           className={`w-5/6 h-[45px] my-3 font-bold rounded-sm transition-colors ${
-            isFormValid
+            isFormValid && !isLoading
               ? 'bg-[#F9E000] text-[#3C2F2B] cursor-pointer'
               : 'bg-[#F5F5F5] text-gray-400 cursor-not-allowed'
           }`}
         >
-          회원가입 완료
+          {isLoading ? '로딩 중...' : '회원가입 완료'}
         </button>
       </form>
+
+      <Modal isOpen={isModalOpen}>
+        <p className='text-center text-base font-medium text-gray-800 mb-6'>
+          {modalMessage}
+        </p>
+        <button
+          onClick={handleModalClose}
+          className='block mx-auto w-24 py-2 rounded-md bg-[#F9E000] text-[#3C2F2B] text-sm font-semibold hover:bg-[#e6d500] transition'
+        >
+          닫기
+        </button>
+      </Modal>
     </div>
   );
 }
