@@ -136,6 +136,12 @@ function Chat() {
             placeholder='메세지를 입력하세요'
             className='h-full w-full resize-none bg-[#FEFEFE] outline-none p-2 pr-16'
             onChange={inputChange}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMsg();
+              }
+            }}
           />
           <button
             onClick={sendMsg}
