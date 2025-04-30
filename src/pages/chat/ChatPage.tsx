@@ -1,25 +1,29 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import ChatItem from '../../components/ChatItem';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import {
   getChatInfo,
   getChatMsg,
   getChatMyMsg,
   postChatMsg,
 } from '../../api/chat';
-import { ChatRoom } from '../../types';
+import { ChatRoom, Message } from '../../types';
 import ChatRoomSkeleton from '../../components/skeletons/ChatRoomSkeleton';
 
 function Chat() {
-  const [content, setContent] = useState('');
-  const [msg, setMsg] = useState([]);
+  const contentRef = useRef('');
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+
+  const [msg, setMsg] = useState<Message[]>([]);
   const [chatInfo, setChatInfo] = useState<ChatRoom | null>(null);
   const [senderType, setSenderType] = useState<'me' | 'other'>('me');
   const [loading, setLoading] = useState(true);
 
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
   const navigate = useNavigate();
   const { id } = useParams();
-
   const sender_id = Number(localStorage.getItem('id'));
 
   const handleImg = () => {
@@ -27,7 +31,8 @@ function Chat() {
   };
 
   const inputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setContent(e.target.value);
+    contentRef.current = e.target.value;
+    setIsButtonDisabled(e.target.value.trim() === '');
   };
 
   const senderChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -37,16 +42,32 @@ function Chat() {
 
   const sendMsg = async () => {
     const chatroomId = id || '';
-
     const senderId =
       senderType === 'me' ? sender_id : Number(chatInfo?.other_user?.id);
+    const now = new Date().toISOString();
+
+    const sendMsgData: Message = {
+      id: Date.now(),
+      chatroom_id: Number(chatroomId),
+      sender_id: senderId,
+      content: contentRef.current,
+      created_at: now,
+      updated_at: now,
+    };
+
+    setMsg((prev) => [...prev, sendMsgData]);
 
     const sendData = {
       sender_id: senderId,
-      content,
+      content: contentRef.current,
     };
 
     await postChatMsg({ chatroomId, sendData });
+
+    if (textareaRef.current) textareaRef.current.value = '';
+    contentRef.current = '';
+
+    setIsButtonDisabled(true);
   };
 
   useEffect(() => {
@@ -66,6 +87,11 @@ function Chat() {
     getChat();
   }, []);
 
+  useEffect(() => {
+    if (scrollRef.current)
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+  }, [msg]);
+
   if (loading) return <ChatRoomSkeleton />;
 
   return (
@@ -82,33 +108,40 @@ function Chat() {
           </p>
         </header>
 
-        <div className='flex flex-col overflow-y-auto h-3/4 p-2 gap-2'>
+        <div
+          ref={scrollRef}
+          className='flex flex-col overflow-y-auto h-3/4 p-2 gap-2'
+        >
           <ChatItem msgData={msg} chatInfo={chatInfo} />
         </div>
-        <div className='flex justify-center gap-4 p-2 bg-stone-100'>
-          <label className='flex items-center gap-1 '>
-            <input
-              type='radio'
-              name='sender'
-              value='me'
-              checked={senderType === 'me'}
-              onChange={senderChange}
-            />
-            나
-          </label>
-          <label className='flex items-center gap-1 h-7'>
-            <input
-              type='radio'
-              name='sender'
-              value='other'
-              checked={senderType === 'other'}
-              onChange={senderChange}
-            />
-            상대방
-          </label>
-        </div>
+        {id !== 'me' && (
+          <div className='flex justify-center gap-4 p-2 bg-stone-100'>
+            <label className='flex items-center gap-1 '>
+              <input
+                type='radio'
+                name='sender'
+                value='me'
+                checked={senderType === 'me'}
+                onChange={senderChange}
+              />
+              나
+            </label>
+            <label className='flex items-center gap-1 h-7'>
+              <input
+                type='radio'
+                name='sender'
+                value='other'
+                checked={senderType === 'other'}
+                onChange={senderChange}
+              />
+              상대방
+            </label>
+          </div>
+        )}
+
         <div className='h-1/5 relative'>
           <textarea
+            ref={textareaRef}
             name='chat'
             placeholder='메세지를 입력하세요'
             className='h-full w-full resize-none bg-[#FEFEFE] outline-none p-2 pr-16'
@@ -117,6 +150,13 @@ function Chat() {
           <button
             onClick={sendMsg}
             className='absolute bottom-2 right-2 z-10 h-10 w-14 rounded-md bg-gray-200'
+            disabled={isButtonDisabled}
+            // onKeyDown={(e) => {
+            //   if (e.key === 'Enter' && !e.shiftKey) {
+            //     e.preventDefault();
+            //     sendMsg();
+            //   }
+            // }}
           >
             입력
           </button>

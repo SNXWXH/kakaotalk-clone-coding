@@ -1,5 +1,3 @@
-import React from 'react';
-
 const ProfileSkeleton = () => {
   return (
     <div className='flex flex-col items-center w-full animate-pulse'>

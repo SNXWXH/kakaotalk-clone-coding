@@ -9,17 +9,22 @@ function ChatBubble({
 }) {
   return (
     <div
-      className={`flex flex-col max-w-[65%] ${
+      className={`flex flex-col ${
         isSender ? 'items-end' : 'items-start'
-      }`}
+      } max-w-[80%]`}
     >
       {!isSender && (
         <p className='text-xs text-gray-500 ml-1 mb-0.5'>{otherUser}</p>
       )}
       <div
-        className={`w-fit break-all whitespace-pre-wrap px-3 py-2 rounded-sm ${
-          isSender ? 'bg-[#F9E000] self-end' : 'bg-[#FEFEFE] self-start'
-        }`}
+        className={`
+          px-3 py-2 text-sm leading-[1.4] rounded-lg whitespace-pre-wrap break-all
+          ${
+            isSender
+              ? 'bg-[#F9E000] text-black self-end'
+              : 'bg-[#FEFEFE] text-black self-start'
+          }
+        `}
       >
         {msg}
       </div>
