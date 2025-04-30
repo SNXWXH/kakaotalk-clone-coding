@@ -105,29 +105,30 @@ function Chat() {
         >
           <ChatItem msgData={msg} chatInfo={chatInfo} />
         </div>
-
-        <div className='flex justify-center gap-4 p-2 bg-stone-100'>
-          <label className='flex items-center gap-1 '>
-            <input
-              type='radio'
-              name='sender'
-              value='me'
-              checked={senderType === 'me'}
-              onChange={senderChange}
-            />
-            나
-          </label>
-          <label className='flex items-center gap-1 h-7'>
-            <input
-              type='radio'
-              name='sender'
-              value='other'
-              checked={senderType === 'other'}
-              onChange={senderChange}
-            />
-            상대방
-          </label>
-        </div>
+        {id !== 'me' && (
+          <div className='flex justify-center gap-4 p-2 bg-stone-100'>
+            <label className='flex items-center gap-1 '>
+              <input
+                type='radio'
+                name='sender'
+                value='me'
+                checked={senderType === 'me'}
+                onChange={senderChange}
+              />
+              나
+            </label>
+            <label className='flex items-center gap-1 h-7'>
+              <input
+                type='radio'
+                name='sender'
+                value='other'
+                checked={senderType === 'other'}
+                onChange={senderChange}
+              />
+              상대방
+            </label>
+          </div>
+        )}
 
         <div className='h-1/5 relative'>
           <textarea
