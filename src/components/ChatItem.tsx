@@ -16,43 +16,33 @@ export default function ChatItem({
       {msgData.map((msg, i) => (
         <div
           key={i}
-          className={`flex ${
+          className={`flex w-full gap-2 items-start ${
             msg.sender_id === curUserId ? 'justify-end' : 'justify-start'
-          } items-start gap-2 w-full`}
+          }`}
         >
           {msg.sender_id !== curUserId && (
-            <>
-              <img
-                src={
-                  chatInfo?.other_user?.profile_image_url ||
-                  '/default-profile.png'
-                }
-                className='w-12 h-12 rounded-md'
-              />
-            </>
+            <img
+              src={chatInfo?.other_user?.profile_image_url}
+              className='w-10 h-10 rounded-md '
+            />
           )}
 
           <div
-            className={`flex items-end gap-1 ${
-              msg.sender_id === curUserId ? 'justify-end' : ''
+            className={`flex flex-wrap items-end gap-1 ${
+              msg.sender_id === curUserId ? 'justify-end' : 'justify-start'
             }`}
           >
-            {msg.sender_id === curUserId && (
+            {msg.sender_id === curUserId ? (
               <>
                 <p className='text-xs text-gray-400 mb-1'>
                   {formatTime(msg.created_at)}
                 </p>
-                <ChatBubble
-                  isSender={msg.sender_id === curUserId}
-                  msg={msg.content}
-                />
+                <ChatBubble isSender msg={msg.content} />
               </>
-            )}
-
-            {msg.sender_id !== curUserId && (
+            ) : (
               <>
                 <ChatBubble
-                  isSender={msg.sender_id === curUserId}
+                  isSender={false}
                   msg={msg.content}
                   otherUser={chatInfo?.other_user?.name}
                 />
