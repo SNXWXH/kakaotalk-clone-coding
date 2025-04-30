@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import ChatItem from '../../\bcomponents/ChatItem';
+import ChatItem from '../../components/ChatItem';
 import { ChangeEvent, useEffect, useState } from 'react';
 import {
   getChatInfo,
@@ -8,12 +8,14 @@ import {
   postChatMsg,
 } from '../../api/chat';
 import { ChatRoom } from '../../types';
+import ChatRoomSkeleton from '../../components/skeletons/ChatRoomSkeleton';
 
 function Chat() {
   const [content, setContent] = useState('');
   const [msg, setMsg] = useState([]);
   const [chatInfo, setChatInfo] = useState<ChatRoom | null>(null);
   const [senderType, setSenderType] = useState<'me' | 'other'>('me');
+  const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
   const { id } = useParams();
@@ -49,17 +51,22 @@ function Chat() {
 
   useEffect(() => {
     const getChat = async () => {
-      let res;
       if (!id) return;
-      id === 'me' ? (res = await getChatMyMsg()) : (res = await getChatMsg(id));
-      let info = await getChatInfo(id);
+      try {
+        const res = id === 'me' ? await getChatMyMsg() : await getChatMsg(id);
+        const info = await getChatInfo(id);
 
-      setMsg(res.data);
-      setChatInfo(info.data);
+        setMsg(res.data);
+        setChatInfo(info.data);
+      } finally {
+        setLoading(false);
+      }
     };
 
     getChat();
   }, []);
+
+  if (loading) return <ChatRoomSkeleton />;
 
   return (
     <>
