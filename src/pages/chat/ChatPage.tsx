@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import ChatItem from '../../components/ChatItem';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import {
   getChatInfo,
   getChatMsg,
@@ -11,7 +11,7 @@ import { ChatRoom } from '../../types';
 import ChatRoomSkeleton from '../../components/skeletons/ChatRoomSkeleton';
 
 function Chat() {
-  const [content, setContent] = useState('');
+  const contentRef = useRef('');
   const [msg, setMsg] = useState([]);
   const [chatInfo, setChatInfo] = useState<ChatRoom | null>(null);
   const [senderType, setSenderType] = useState<'me' | 'other'>('me');
@@ -27,7 +27,7 @@ function Chat() {
   };
 
   const inputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setContent(e.target.value);
+    contentRef.current = e.target.value;
   };
 
   const senderChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -43,7 +43,7 @@ function Chat() {
 
     const sendData = {
       sender_id: senderId,
-      content,
+      content: contentRef.current,
     };
 
     await postChatMsg({ chatroomId, sendData });
@@ -66,6 +66,7 @@ function Chat() {
     getChat();
   }, []);
 
+  console.log(msg);
   if (loading) return <ChatRoomSkeleton />;
 
   return (
