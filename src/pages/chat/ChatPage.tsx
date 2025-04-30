@@ -12,6 +12,8 @@ import ChatRoomSkeleton from '../../components/skeletons/ChatRoomSkeleton';
 
 function Chat() {
   const contentRef = useRef('');
+  const scrollRef = useRef<HTMLDivElement | null>(null); // 🔹 스크롤 ref 추가
+
   const [msg, setMsg] = useState<Message[]>([]);
   const [chatInfo, setChatInfo] = useState<ChatRoom | null>(null);
   const [senderType, setSenderType] = useState<'me' | 'other'>('me');
@@ -19,7 +21,6 @@ function Chat() {
 
   const navigate = useNavigate();
   const { id } = useParams();
-
   const sender_id = Number(localStorage.getItem('id'));
 
   const handleImg = () => {
@@ -39,10 +40,9 @@ function Chat() {
     const chatroomId = id || '';
     const senderId =
       senderType === 'me' ? sender_id : Number(chatInfo?.other_user?.id);
-
     const now = new Date().toISOString();
 
-    const sendMsgData = {
+    const sendMsgData: Message = {
       id: Date.now(),
       chatroom_id: Number(chatroomId),
       sender_id: senderId,
@@ -78,7 +78,11 @@ function Chat() {
     getChat();
   }, []);
 
-  console.log(msg);
+  useEffect(() => {
+    if (scrollRef.current)
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+  }, [msg]);
+
   if (loading) return <ChatRoomSkeleton />;
 
   return (
@@ -95,9 +99,13 @@ function Chat() {
           </p>
         </header>
 
-        <div className='flex flex-col overflow-y-auto h-3/4 p-2 gap-2'>
+        <div
+          ref={scrollRef}
+          className='flex flex-col overflow-y-auto h-3/4 p-2 gap-2'
+        >
           <ChatItem msgData={msg} chatInfo={chatInfo} />
         </div>
+
         <div className='flex justify-center gap-4 p-2 bg-stone-100'>
           <label className='flex items-center gap-1 '>
             <input
@@ -120,6 +128,7 @@ function Chat() {
             상대방
           </label>
         </div>
+
         <div className='h-1/5 relative'>
           <textarea
             name='chat'
