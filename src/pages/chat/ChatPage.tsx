@@ -7,12 +7,12 @@ import {
   getChatMyMsg,
   postChatMsg,
 } from '../../api/chat';
-import { ChatRoom } from '../../types';
+import { ChatRoom, Message } from '../../types';
 import ChatRoomSkeleton from '../../components/skeletons/ChatRoomSkeleton';
 
 function Chat() {
   const contentRef = useRef('');
-  const [msg, setMsg] = useState([]);
+  const [msg, setMsg] = useState<Message[]>([]);
   const [chatInfo, setChatInfo] = useState<ChatRoom | null>(null);
   const [senderType, setSenderType] = useState<'me' | 'other'>('me');
   const [loading, setLoading] = useState(true);
@@ -37,9 +37,21 @@ function Chat() {
 
   const sendMsg = async () => {
     const chatroomId = id || '';
-
     const senderId =
       senderType === 'me' ? sender_id : Number(chatInfo?.other_user?.id);
+
+    const now = new Date().toISOString();
+
+    const sendMsgData = {
+      id: Date.now(),
+      chatroom_id: Number(chatroomId),
+      sender_id: senderId,
+      content: contentRef.current,
+      created_at: now,
+      updated_at: now,
+    };
+
+    setMsg((prev) => [...prev, sendMsgData]);
 
     const sendData = {
       sender_id: senderId,
