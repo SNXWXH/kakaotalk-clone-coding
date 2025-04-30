@@ -12,12 +12,15 @@ import ChatRoomSkeleton from '../../components/skeletons/ChatRoomSkeleton';
 
 function Chat() {
   const contentRef = useRef('');
-  const scrollRef = useRef<HTMLDivElement | null>(null); // 🔹 스크롤 ref 추가
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   const [msg, setMsg] = useState<Message[]>([]);
   const [chatInfo, setChatInfo] = useState<ChatRoom | null>(null);
   const [senderType, setSenderType] = useState<'me' | 'other'>('me');
   const [loading, setLoading] = useState(true);
+
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
   const navigate = useNavigate();
   const { id } = useParams();
@@ -29,6 +32,7 @@ function Chat() {
 
   const inputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     contentRef.current = e.target.value;
+    setIsButtonDisabled(e.target.value.trim() === '');
   };
 
   const senderChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -59,6 +63,11 @@ function Chat() {
     };
 
     await postChatMsg({ chatroomId, sendData });
+
+    if (textareaRef.current) textareaRef.current.value = '';
+    contentRef.current = '';
+
+    setIsButtonDisabled(true);
   };
 
   useEffect(() => {
@@ -132,20 +141,22 @@ function Chat() {
 
         <div className='h-1/5 relative'>
           <textarea
+            ref={textareaRef}
             name='chat'
             placeholder='메세지를 입력하세요'
             className='h-full w-full resize-none bg-[#FEFEFE] outline-none p-2 pr-16'
             onChange={inputChange}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMsg();
-              }
-            }}
           />
           <button
             onClick={sendMsg}
             className='absolute bottom-2 right-2 z-10 h-10 w-14 rounded-md bg-gray-200'
+            disabled={isButtonDisabled}
+            // onKeyDown={(e) => {
+            //   if (e.key === 'Enter' && !e.shiftKey) {
+            //     e.preventDefault();
+            //     sendMsg();
+            //   }
+            // }}
           >
             입력
           </button>
