@@ -6,6 +6,8 @@ import axios from 'axios';
 export default function LoginPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleEmail = (e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
@@ -16,6 +18,7 @@ export default function LoginPage() {
   };
 
   let [active, setActive] = useState(false);
+
   const activeLogin = () => {
     email && password ? setActive(true) : setActive(false);
   };
@@ -23,6 +26,8 @@ export default function LoginPage() {
   let [msg, setMsg] = useState(' ');
 
   const handleLogin = async () => {
+    setIsLoading(true);
+
     if (!/^\S+@\S+\.\S+$/.test(email)) {
       setMsg('올바른 이메일 형식을 입력하세요');
       return;
@@ -45,6 +50,8 @@ export default function LoginPage() {
           setMsg(err.response?.data.message);
         else setMsg('로그인 중 오류가 발생했습니다. 다시 시도해 주세요.');
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -74,12 +81,12 @@ export default function LoginPage() {
         <button
           onClick={handleLogin}
           className={`w-2/3 h-[45px] my-3 ${
-            active
+            active && !isLoading
               ? 'bg-[#3C2F2B] text-[#F5F5F5] cursor-pointer'
               : 'bg-[#F5F5F5] cursor-not-allowed'
           }`}
         >
-          로그인
+          {isLoading ? '로딩중...' : '로그인'}
         </button>
         <p className='text-red-500 text-sm h-4'>{msg}</p>
         <button onClick={handleNavigate} className='mt-3 cursor-pointer'>
