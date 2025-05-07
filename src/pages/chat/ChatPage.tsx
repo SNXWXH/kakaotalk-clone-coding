@@ -41,6 +41,10 @@ function Chat() {
   };
 
   const sendMsg = async () => {
+    const currentMsg = contentRef.current;
+    if (textareaRef.current) textareaRef.current.value = '';
+    contentRef.current = '';
+
     const chatroomId = id || '';
     const senderId =
       senderType === 'me' ? sender_id : Number(chatInfo?.other_user?.id);
@@ -50,7 +54,7 @@ function Chat() {
       id: Date.now(),
       chatroom_id: Number(chatroomId),
       sender_id: senderId,
-      content: contentRef.current,
+      content: currentMsg,
       created_at: now,
       updated_at: now,
     };
@@ -59,13 +63,10 @@ function Chat() {
 
     const sendData = {
       sender_id: senderId,
-      content: contentRef.current,
+      content: currentMsg,
     };
 
     await postChatMsg({ chatroomId, sendData });
-
-    if (textareaRef.current) textareaRef.current.value = '';
-    contentRef.current = '';
 
     setIsButtonDisabled(true);
   };
