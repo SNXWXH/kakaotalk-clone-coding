@@ -38,7 +38,7 @@ function ChatList() {
     <div className='flex flex-col w-[392px] h-[642px] bg-[#FEFEFE] text-sm rounded-xl'>
       <div className='flex items-center w-full h-24 rounded-t-2xl bg-[#F9E000]'>
         <p className='text-4xl font-bold ml-6'>채팅</p>
-        <p className='flex items-end ml-2 text-base'>서라</p>
+        <p className='flex items-end ml-2 text-base'>{userInfo?.name}</p>
       </div>
       <div className='overflow-auto'>
         <div className='flex justify-between items-center h-20 bg-[#FEFEFE] hover:bg-gray-100'>
