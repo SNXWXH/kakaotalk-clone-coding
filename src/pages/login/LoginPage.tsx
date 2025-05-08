@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, KeyboardEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../../api/user';
 import axios from 'axios';
@@ -6,30 +6,38 @@ import axios from 'axios';
 export default function LoginPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [active, setActive] = useState(false);
+  const [msg, setMsg] = useState(' ');
   const [isLoading, setIsLoading] = useState(false);
 
   const handleEmail = (e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
 
-  const [password, setPassword] = useState('');
   const handlePassword = (e: ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   };
 
-  let [active, setActive] = useState(false);
-
   const activeLogin = () => {
-    email && password ? setActive(true) : setActive(false);
+    setActive(email.trim() !== '' && password.trim() !== '');
   };
 
-  let [msg, setMsg] = useState(' ');
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    activeLogin();
+    if (e.key === 'Enter' && active && !isLoading) {
+      handleLogin();
+    }
+  };
 
   const handleLogin = async () => {
+    if (isLoading) return;
+
     setIsLoading(true);
 
-    if (!/^\S+@\S+\.\S+$/.test(email)) {
+    if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
       setMsg('올바른 이메일 형식을 입력하세요');
+      setIsLoading(false);
       return;
     }
 
@@ -40,7 +48,6 @@ export default function LoginPage() {
         setMsg('');
         localStorage.setItem('token', res.data.accessToken);
         localStorage.setItem('id', res.data.user.id);
-
         navigate('/chatlist');
       }
     } catch (err: unknown) {
@@ -60,39 +67,40 @@ export default function LoginPage() {
   };
 
   return (
-    <>
-      <div className='flex flex-col items-center w-[392px] h-[642px] bg-[#F9E000] text-sm rounded-xl'>
-        <img src={'/kakaoLogo.png'} className='w-1/3 mt-25 mb-10' />
+    <div className='flex flex-col items-center w-[392px] h-[642px] bg-[#F9E000] text-sm rounded-xl'>
+      <img src={'/kakaoLogo.png'} className='w-1/3 mt-25 mb-10' />
 
-        <input
-          type='email'
-          placeholder='아이디(E-mail)'
-          onChange={handleEmail}
-          onKeyUp={activeLogin}
-          className='w-2/3 h-[45px] bg-[#F5F5F5] p-2 border-1 border-zinc-200 focus:ring-1 focus:ring-inset focus:ring-gray-400 focus:outline-none'
-        />
-        <input
-          type='password'
-          placeholder='비밀번호'
-          onChange={handlePassword}
-          onKeyUp={activeLogin}
-          className='w-2/3 h-[45px] bg-[#F5F5F5] p-2 border-1 border-zinc-200 focus:ring-1 focus:ring-inset focus:ring-gray-400 focus:outline-none'
-        />
-        <button
-          onClick={handleLogin}
-          className={`w-2/3 h-[45px] my-3 ${
-            active && !isLoading
-              ? 'bg-[#3C2F2B] text-[#F5F5F5] cursor-pointer'
-              : 'bg-[#F5F5F5] cursor-not-allowed'
-          }`}
-        >
-          {isLoading ? '로딩중...' : '로그인'}
-        </button>
-        <p className='text-red-500 text-sm h-4'>{msg}</p>
-        <button onClick={handleNavigate} className='mt-3 cursor-pointer'>
-          이메일로 회원가입
-        </button>
-      </div>
-    </>
+      <input
+        type='email'
+        placeholder='아이디(E-mail)'
+        value={email}
+        onChange={handleEmail}
+        onKeyDown={handleKeyDown}
+        className='w-2/3 h-[45px] bg-[#F5F5F5] p-2 border-1 border-zinc-200 focus:ring-1 focus:ring-inset focus:ring-gray-400 focus:outline-none'
+      />
+      <input
+        type='password'
+        placeholder='비밀번호'
+        value={password}
+        onChange={handlePassword}
+        onKeyDown={handleKeyDown}
+        className='w-2/3 h-[45px] bg-[#F5F5F5] p-2 border-1 border-zinc-200 focus:ring-1 focus:ring-inset focus:ring-gray-400 focus:outline-none'
+      />
+      <button
+        onClick={handleLogin}
+        disabled={!active || isLoading}
+        className={`w-2/3 h-[45px] my-3 ${
+          active && !isLoading
+            ? 'bg-[#3C2F2B] text-[#F5F5F5] cursor-pointer'
+            : 'bg-[#F5F5F5] cursor-not-allowed'
+        }`}
+      >
+        {isLoading ? '로딩중...' : '로그인'}
+      </button>
+      <p className='text-red-500 text-sm h-4'>{msg}</p>
+      <button onClick={handleNavigate} className='mt-3 cursor-pointer'>
+        이메일로 회원가입
+      </button>
+    </div>
   );
 }
