@@ -6,21 +6,25 @@ import axios from 'axios';
 export default function LoginPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [active, setActive] = useState(false);
+  const [msg, setMsg] = useState(' ');
+
   const handleEmail = (e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
 
-  const [password, setPassword] = useState('');
   const handlePassword = (e: ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   };
 
-  let [active, setActive] = useState(false);
   const activeLogin = () => {
     email && password ? setActive(true) : setActive(false);
   };
 
-  let [msg, setMsg] = useState(' ');
+  const handleNavigate = () => {
+    navigate('/register');
+  };
 
   const handleLogin = async () => {
     if (!/^\S+@\S+\.\S+$/.test(email)) {
@@ -46,10 +50,6 @@ export default function LoginPage() {
         else setMsg('로그인 중 오류가 발생했습니다. 다시 시도해 주세요.');
       }
     }
-  };
-
-  const handleNavigate = () => {
-    navigate('/register');
   };
 
   return (
