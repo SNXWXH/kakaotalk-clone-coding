@@ -17,19 +17,22 @@ function ChatList() {
   };
 
   useEffect(() => {
-    const getChat = async () => {
-      const res = await getChatRoom();
-      setChatRooms(res.data);
+    const fetchData = async () => {
+      try {
+        const [chatRes, userInfoRes] = await Promise.all([
+          getChatRoom(),
+          getUserInfo(),
+        ]);
+        setChatRooms(chatRes.data);
+        setUserInfo(userInfoRes.data);
+      } catch (error) {
+        console.error('ChatList 에러:', error);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    const userInfoData = async () => {
-      const res = await getUserInfo();
-      setUserInfo(res.data);
-    };
-
-    Promise.all([getChat(), userInfoData()]).finally(() => {
-      setLoading(false);
-    });
+    fetchData();
   }, []);
 
   if (loading) return <ChatListSkeleton />;
