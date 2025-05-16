@@ -1,5 +1,6 @@
 const emailValidation = (email: string) => {
-  if (!/^\S+@\S+\.\S+$/.test(email)) return '이메일 형식이 아닙니다.';
+  if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email))
+    return '이메일 형식이 아닙니다.';
   return '';
 };
 
