@@ -11,6 +11,7 @@ import {
   pwDuplicateValidation,
   pwValidation,
 } from '../../utils/validation';
+import RegisterInput from '../../components/RegisterInput';
 
 function RegisterPage() {
   const [form, setForm] = useState({
@@ -50,12 +51,10 @@ function RegisterPage() {
         message = pwValidation(value);
         if (!message && form.email)
           message = pwDuplicateValidation(form.email, value);
-
         break;
 
       case 'confirm':
         if (value !== form.password) message = '비밀번호가 일치하지 않습니다.';
-
         break;
 
       case 'phone':
@@ -73,9 +72,7 @@ function RegisterPage() {
     const { name, value } = e.target;
     let newValue = value;
 
-    if (name === 'phone') {
-      newValue = value.replace(/[^0-9]/g, '');
-    }
+    if (name === 'phone') newValue = value.replace(/[^0-9]/g, '');
 
     setForm((prev) => ({ ...prev, [name]: newValue }));
     validateField(name, newValue);
@@ -138,92 +135,63 @@ function RegisterPage() {
         onSubmit={handleSubmit}
         className='flex flex-col w-full items-center'
       >
-        <div className='flex w-5/6 justify-between items-start'>
-          <label className='font-medium w-1/4 text-sm text-center pr-2 pt-1'>
-            아이디 <br />
-            (E-mail)
-          </label>
-          <div className='w-2/3'>
-            <input
-              type='text'
-              name='email'
-              value={form.email}
-              onChange={handleChange}
-              placeholder='아이디를 입력하세요(이메일 형식)'
-              className='w-full h-[45px] p-2 border border-zinc-200 rounded focus:ring-1 focus:ring-inset focus:ring-gray-400 focus:outline-none'
-            />
-            <p className='text-red-500 text-xs mt-1 min-h-[18px]'>
-              {errors.email || '\u00A0'}
-            </p>
-          </div>
-        </div>
-        <div className='flex w-5/6 justify-between items-start'>
-          <label className='font-medium w-1/4 text-sm text-center pr-2 pt-2'>
-            비밀번호
-          </label>
-          <div className='w-2/3'>
-            <input
-              type='password'
-              name='password'
-              value={form.password}
-              onChange={handleChange}
-              placeholder='비밀번호 8자 이상, 특수문자 포함'
-              className='w-full h-[45px] p-2 border border-zinc-200 rounded focus:ring-1 focus:ring-inset focus:ring-gray-400 focus:outline-none'
-            />
-            <p className='text-red-500 text-xs mt-1 min-h-[18px] whitespace-pre-line'>
-              {errors.password || '\u00A0'}
-            </p>
-          </div>
-        </div>
-        <div className='flex w-5/6 justify-between items-start'>
-          <label className='font-medium w-1/4 text-sm text-center pr-2 pt-2'>
-            비밀번호 <br />
-            확인
-          </label>
-          <div className='w-2/3'>
-            <input
-              type='password'
-              name='confirm'
-              value={form.confirm}
-              onChange={handleChange}
-              placeholder='비밀번호를 입력하세요'
-              className='w-full h-[45px] p-2 border border-zinc-200 rounded focus:ring-1 focus:ring-inset focus:ring-gray-400 focus:outline-none'
-            />
-            <p className='text-red-500 text-xs mt-1 min-h-[18px]'>
-              {errors.confirm || '\u00A0'}
-            </p>
-          </div>
-        </div>
-        <div className='flex w-5/6 justify-between items-center mb-3'>
-          <label className='font-medium w-1/4 text-center'>이름</label>
-          <input
-            type='text'
-            name='name'
-            value={form.name}
-            onChange={handleChange}
-            placeholder='이름을 입력하세요'
-            className='w-2/3 h-[45px] p-2 border border-zinc-200 focus:ring-1 focus:ring-inset focus:ring-gray-400 focus:outline-none'
-          />
-        </div>
-        <div className='flex w-5/6 justify-between items-start mt-2'>
-          <label className='font-medium w-1/4 text-center pr-2 pt-2'>
-            휴대폰 번호
-          </label>
-          <div className='w-2/3'>
-            <input
-              type='tel'
-              name='phone'
-              value={form.phone}
-              onChange={handleChange}
-              maxLength={11}
-              placeholder='- 없이 번호를 입력하세요'
-              className='w-full h-[45px] p-2 border border-zinc-200 focus:ring-1 focus:ring-inset focus:ring-gray-400 focus:outline-none'
-            />
-            <p className='text-red-500 text-xs mt-1 min-h-[18px]'>
-              {errors.phone || '\u00A0'}
-            </p>
-          </div>
-        </div>
+        <RegisterInput
+          label={
+            <>
+              아이디
+              <br />
+              (E-mail)
+            </>
+          }
+          type='text'
+          name='email'
+          value={form.email}
+          onChange={handleChange}
+          placeholder='아이디를 입력하세요(이메일 형식)'
+          errors={errors.email}
+        />
+        <RegisterInput
+          label='비밀번호'
+          type='password'
+          name='password'
+          value={form.password}
+          onChange={handleChange}
+          placeholder='비밀번호 8자 이상, 특수문자 포함'
+          errors={errors.password}
+        />
+        <RegisterInput
+          label={
+            <>
+              비밀번호
+              <br />
+              확인
+            </>
+          }
+          type='password'
+          name='confirm'
+          value={form.confirm}
+          onChange={handleChange}
+          placeholder='비밀번호를 입력하세요'
+          errors={errors.confirm}
+        />
+        <RegisterInput
+          label='이름'
+          type='text'
+          name='name'
+          value={form.name}
+          onChange={handleChange}
+          placeholder='이름을 입력하세요'
+        />
+        <RegisterInput
+          label='휴대폰번호'
+          type='tel'
+          name='phone'
+          value={form.phone}
+          onChange={handleChange}
+          maxLength={11}
+          placeholder='- 없이 번호를 입력하세요'
+          errors={errors.phone}
+        />
         <button
           type='submit'
           disabled={!isFormValid || isLoading}

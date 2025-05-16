@@ -53,3 +53,14 @@ export type ProfileData = {
   name: string;
   bio: string;
 };
+
+export type RegisterInputType = {
+  label: string | ReactNode;
+  type: string;
+  name: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  maxLength?: number;
+  placeholder: string;
+  errors?: string;
+};
