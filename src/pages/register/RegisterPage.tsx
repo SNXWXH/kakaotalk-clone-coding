@@ -5,6 +5,12 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { register } from '../../api/user';
 import Modal from '../../components/Modal';
+import {
+  emailValidation,
+  phoneValidation,
+  pwDuplicateValidation,
+  pwValidation,
+} from '../../utils/validation';
 
 function RegisterPage() {
   const [form, setForm] = useState({
@@ -32,45 +38,32 @@ function RegisterPage() {
     setModalMessage('');
   };
 
-  //* 리팩토링 필요
   const validateField = (name: string, value: string) => {
     let message = '';
 
-    if (name === 'email') {
-      if (!value) message = '이메일을 입력해주세요.';
-      else if (!/^\S+@\S+\.\S+$/.test(value)) {
-        message = '이메일 형식이 아닙니다.';
-      }
-    } else if (name === 'password') {
-      if (
-        value.length < 8 ||
-        !/[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/.test(value)
-      )
-        message = '8자 이상, 특수문자가 포함되어야 합니다.';
-      else if (form.email) {
-        const id = form.email.split('@')[0];
+    switch (name) {
+      case 'email':
+        message = emailValidation(value);
+        break;
 
-        if (id.length >= 4) {
-          const lowerValue = value.toLowerCase();
-          const lowerId = id.toLowerCase();
+      case 'password':
+        message = pwValidation(value);
+        if (!message && form.email)
+          message = pwDuplicateValidation(form.email, value);
 
-          for (let i = 0; i <= lowerId.length - 4; i++) {
-            const part = lowerId.slice(i, i + 4);
-            if (lowerValue.includes(part)) {
-              message = '비밀번호에 아이디 일부가 포함되어 있습니다.';
-              break;
-            }
-          }
-        }
-      }
-    } else if (name === 'confirm') {
-      if (value !== form.password) {
-        message = '비밀번호가 일치하지 않습니다.';
-      }
-    } else if (name === 'phone') {
-      if (value.length < 11) {
-        message = '휴대폰 번호 11자리를 모두 입력해주세요.';
-      }
+        break;
+
+      case 'confirm':
+        if (value !== form.password) message = '비밀번호가 일치하지 않습니다.';
+
+        break;
+
+      case 'phone':
+        message = phoneValidation(value);
+        break;
+
+      default:
+        break;
     }
 
     setErrors((prev) => ({ ...prev, [name]: message }));
