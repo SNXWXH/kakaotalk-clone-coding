@@ -1,5 +1,3 @@
-// * input 컴포넌트화 하기
-
 import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
